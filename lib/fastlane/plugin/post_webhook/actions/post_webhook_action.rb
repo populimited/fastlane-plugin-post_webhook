@@ -1,11 +1,30 @@
 require 'fastlane/action'
 require_relative '../helper/post_webhook_helper'
 
+require "net/http"
+require "uri"
+require 'json'
+
 module Fastlane
   module Actions
     class PostWebhookAction < Action
       def self.run(params)
-        UI.message("The post_webhook plugin is working!")
+        uri = URI.parse(params[:url])
+        body = params[:body]
+        api_key = params[:api_key]
+        headers = {
+          "Authorization" => "Bearer #{api_key}",
+          "Content-Type" => "application/json"
+        }
+
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = (uri.scheme == "https")
+        response = http.post(uri.path, body.to_json, headers)
+
+        {
+          "status" => response.code.to_i,
+          "response_body" => JSON.parse(response.body)
+        }
       end
 
       def self.description
@@ -17,29 +36,31 @@ module Fastlane
       end
 
       def self.return_value
-        # If your method provides a return value, you can describe here what it does
+        "The response body from the webhook call"
       end
 
       def self.details
-        # Optional:
         "Triggers a webhook of a generic URL, given the URL, an api_key and a JSON body"
       end
 
       def self.available_options
         [
-          # FastlaneCore::ConfigItem.new(key: :your_option,
-          #                         env_name: "POST_WEBHOOK_YOUR_OPTION",
-          #                      description: "A description of your option",
-          #                         optional: false,
-          #                             type: String)
+          FastlaneCore::ConfigItem.new(key: :url,
+                                       description: "The URL to send the POST request to",
+                                       optional: false,
+                                       type: String),
+          FastlaneCore::ConfigItem.new(key: :api_key,
+                                       description: "The API key for authorization",
+                                       optional: false,
+                                       type: String),
+          FastlaneCore::ConfigItem.new(key: :body,
+                                       description: "The JSON body for the POST request",
+                                       optional: false,
+                                       type: Hash)
         ]
       end
 
       def self.is_supported?(platform)
-        # Adjust this if your plugin only works for a particular platform (iOS vs. Android, for example)
-        # See: https://docs.fastlane.tools/advanced/#control-configuration-by-lane-and-by-platform
-        #
-        # [:ios, :mac, :android].include?(platform)
         true
       end
     end
