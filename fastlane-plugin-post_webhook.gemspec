@@ -6,7 +6,7 @@ Gem::Specification.new do |spec|
   spec.name          = 'fastlane-plugin-post_webhook'
   spec.version       = Fastlane::PostWebhook::VERSION
   spec.author        = 'Lorenzo Zabot'
-  spec.email         = 'lorenzozabot@gmail.com'
+  spec.email         = 'lorenzo.zabot@voxtours.com'
 
   spec.summary       = 'Triggers a generic webhook.'
   # spec.homepage      = "https://github.com/<GITHUB_USERNAME>/fastlane-plugin-post_webhook"
