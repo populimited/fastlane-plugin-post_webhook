@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.author        = 'Lorenzo Zabot'
   spec.email         = 'lorenzozabot@gmail.com'
 
-  spec.summary       = 'Triggers a webhook of a generic URL'
+  spec.summary       = 'Triggers a generic webhook.'
   # spec.homepage      = "https://github.com/<GITHUB_USERNAME>/fastlane-plugin-post_webhook"
   spec.license       = "MIT"
 
