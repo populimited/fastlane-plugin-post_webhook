@@ -20,9 +20,15 @@ module Fastlane
         http.use_ssl = (uri.scheme == 'https')
         response = http.post(uri.path, body.to_json, headers)
 
+        begin
+          response_body = JSON.parse(response.body)
+        rescue JSON::ParserError
+          response_body = response.body
+        end
+
         {
           'status' => response.code.to_i,
-          'response_body' => JSON.parse(response.body)
+          'response_body' => response_body
         }
       end
 
